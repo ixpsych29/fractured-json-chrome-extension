@@ -35,12 +35,17 @@ chrome.runtime.onMessage.addListener((msg: any, _sender, sendResponse) => {
     if (err instanceof FracturedJsonError) {
       const pos = (err as FracturedJsonError).InputPosition;
       let message = err.message;
-      if (pos) message += ` at row=${pos.Row+1}, col=${pos.Column+1}`;
+      if (pos) message += ` at row=${pos.Row + 1}, col=${pos.Column + 1}`;
       sendResponse({ type: 'error', message });
     } else {
-      sendResponse({ type: 'error', message: (err && err.message) ? err.message : String(err) });
+      sendResponse({
+        type: 'error',
+        message: err && err.message ? err.message : String(err),
+      });
     }
   }
-  // response sent synchronously
-  return false;
+  // Return true to keep the message channel open for async sendResponse.
+  // Even though we respond synchronously above, returning true prevents the
+  // "message port closed before a response was received" warning in MV3 service workers.
+  return true;
 });

@@ -1,0 +1,348 @@
+/* Scoped styles for the in‑page Fractured JSON viewer. All selectors are intentionally namespaced under
+   #fractured-json-page-root so the host page is not affected. */
+
+#fractured-json-page-root {
+  --accent: #2b7be4;
+  --bg: #0f1720;
+  --card: #0b1220;
+  --text: #e6eef8;
+  --gutter: 48px;
+  /* browser-window chrome colours (dark defaults) */
+  --bw-titlebar: #1c2333;
+  --bw-border: rgba(255, 255, 255, 0.07);
+  --bw-body: #0b1220;
+  --bw-bar-bg: rgba(255, 255, 255, 0.06);
+  --bw-bar-text: rgba(200, 215, 235, 0.55);
+  --bw-shadow: 0 8px 40px rgba(0, 0, 0, 0.55), 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+/* ── themes ─────────────────────────────────────────────────────────────── */
+#fractured-json-page-root.theme-light {
+  --bg: #f0f2f5;
+  --card: #ffffff;
+  --text: #111827;
+  --bw-titlebar: #e2e5ea;
+  --bw-border: rgba(0, 0, 0, 0.1);
+  --bw-body: #ffffff;
+  --bw-bar-bg: rgba(0, 0, 0, 0.06);
+  --bw-bar-text: rgba(60, 70, 90, 0.6);
+  --bw-shadow: 0 8px 40px rgba(0, 0, 0, 0.18), 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+#fractured-json-page-root.theme-cobalt {
+  --bg: #001a2e;
+  --card: #002b3a;
+  --text: #cfeefb;
+  --accent: #4fd6ff;
+  --bw-titlebar: #002240;
+  --bw-border: rgba(79, 214, 255, 0.1);
+  --bw-body: #00162a;
+  --bw-bar-bg: rgba(79, 214, 255, 0.07);
+  --bw-bar-text: rgba(207, 238, 251, 0.45);
+  --bw-shadow: 0 8px 40px rgba(0, 0, 0, 0.65), 0 2px 8px rgba(0, 20, 40, 0.5);
+}
+
+/* token colours — light overrides */
+#fractured-json-page-root.theme-light #outputPre {
+  background: #ffffff;
+  color: #111827;
+}
+#fractured-json-page-root.theme-light .tok-key {
+  color: #b7791f;
+}
+#fractured-json-page-root.theme-light .tok-string {
+  color: #2f855a;
+}
+#fractured-json-page-root.theme-light .tok-number {
+  color: #b83280;
+}
+#fractured-json-page-root.theme-light .tok-boolean {
+  color: #117a8b;
+}
+#fractured-json-page-root.theme-light .tok-comment {
+  color: #6b7280;
+}
+
+/* token colours — cobalt overrides */
+#fractured-json-page-root.theme-cobalt #outputPre {
+  background: linear-gradient(180deg, #00162a, #002240);
+}
+#fractured-json-page-root.theme-cobalt .tok-key {
+  color: #ffd580;
+}
+#fractured-json-page-root.theme-cobalt .tok-string {
+  color: #95e454;
+}
+#fractured-json-page-root.theme-cobalt .tok-number {
+  color: #fd8bff;
+}
+#fractured-json-page-root.theme-cobalt .tok-boolean {
+  color: #4fd6ff;
+}
+#fractured-json-page-root.theme-cobalt .tok-comment {
+  color: #7790a0;
+}
+
+/* ── page root — full-viewport flex column so only JSON content scrolls ─── */
+#fractured-json-page-root {
+  font-family:    Inter, 'Segoe UI', Helvetica, Arial, sans-serif;
+  color:          var(--text);
+  background:     var(--bg);
+  height:         100vh;          /* fill the viewport exactly */
+  overflow:       hidden;         /* prevent the page itself from scrolling */
+  display:        flex;
+  flex-direction: column;
+  box-sizing:     border-box;
+  position:       relative;
+}
+
+/* ── controls toolbar — sticky header, never scrolls away ───────────────── */
+#fractured-json-page-root #fj-controls {
+  flex-shrink:     0;             /* never shrink — always visible */
+  padding:         10px 14px;
+  display:         flex;
+  flex-wrap:       wrap;
+  align-items:     center;
+  gap:             10px;
+  background:      var(--bg);     /* solid base so content doesn't bleed through */
+  /* frosted-glass shimmer when JSON scrolls under it */
+  backdrop-filter: blur(12px) saturate(1.4);
+  -webkit-backdrop-filter: blur(12px) saturate(1.4);
+  border-bottom:   1px solid var(--bw-border);
+  z-index:         10;
+}
+#fractured-json-page-root strong {
+  font-weight: 600;
+}
+#fractured-json-page-root label {
+  font-size: 13px;
+}
+#fractured-json-page-root input[type='checkbox'],
+#fractured-json-page-root input[type='radio'] {
+  margin-right: 6px;
+  accent-color: var(--accent);
+}
+#fractured-json-page-root select {
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--card) !important;
+  color: var(--text) !important;
+}
+#fractured-json-page-root select option {
+  background: var(--card) !important;
+  color: var(--text) !important;
+}
+#fractured-json-page-root button {
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+}
+
+/* ── browser window shell — fills remaining height, content scrolls inside ── */
+#fractured-json-page-root #fj-browser-window {
+  margin:         0 14px 14px;    /* no top margin — controls bar provides spacing */
+  border-radius:  12px;
+  border:         1px solid var(--bw-border);
+  box-shadow:     var(--bw-shadow);
+  overflow:       hidden;
+  display:        flex;
+  flex-direction: column;
+  flex:           1;              /* grow to fill remaining viewport height */
+  min-height:     0;              /* allow flex child to shrink below content size */
+}
+
+/* title bar */
+#fractured-json-page-root #fj-browser-titlebar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  height: 40px;
+  background: var(--bw-titlebar);
+  border-bottom: 1px solid var(--bw-border);
+  flex-shrink: 0;
+  user-select: none;
+}
+
+/* traffic lights */
+#fractured-json-page-root #fj-traffic-lights {
+  display: flex;
+  gap: 7px;
+  flex-shrink: 0;
+}
+#fractured-json-page-root .fj-dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  display: inline-block;
+  cursor: default;
+  transition: filter 0.15s ease;
+}
+#fractured-json-page-root .fj-dot:hover {
+  filter: brightness(1.25);
+}
+#fractured-json-page-root .fj-dot-red {
+  background: #ff5f57;
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.25);
+}
+#fractured-json-page-root .fj-dot-yellow {
+  background: #febc2e;
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.2);
+}
+#fractured-json-page-root .fj-dot-green {
+  background: #28c840;
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.2);
+}
+
+/* address bar */
+#fractured-json-page-root #fj-addressbar {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bw-bar-bg);
+  border-radius: 20px;
+  padding: 0 12px;
+  height: 26px;
+  max-width: 640px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+#fractured-json-page-root #fj-lock-icon {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+  color: var(--bw-bar-text);
+  opacity: 0.8;
+}
+#fractured-json-page-root #fj-url-display {
+  font-size: 11.5px;
+  color: var(--bw-bar-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.01em;
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, Monaco, monospace;
+}
+
+/* window body — fills remaining window height, lets outputFrame scroll */
+#fractured-json-page-root #fj-browser-body {
+  background: var(--bw-body);
+  flex:       1;
+  overflow:   hidden;
+  display:    flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* ── JSON output area — scrolls independently inside the window body ──────── */
+#fractured-json-page-root #outputFrame {
+  flex:       1;                  /* fill the browser body */
+  overflow:   auto;               /* THIS is the scroll container */
+  min-height: 0;
+  background: linear-gradient(180deg, #0b1220, #0f1728);
+}
+#fractured-json-page-root.theme-light #outputFrame {
+  background: #ffffff;
+}
+#fractured-json-page-root.theme-cobalt #outputFrame {
+  background: linear-gradient(180deg, #00162a, #002240);
+}
+
+#fractured-json-page-root #outputPre {
+  margin:        0;
+  padding:       16px;
+  min-height:    100%;            /* at least fill the frame */
+  color:         var(--text);
+  font-family:   ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', monospace;
+  font-size:     12.5px;
+  line-height:   1.45;
+  white-space:   pre;
+  overflow:      visible;         /* let outputFrame handle scrolling */
+  counter-reset: linenumber;
+  background:    transparent;
+}
+#fractured-json-page-root #outputPre code {
+  display:    block;
+  white-space: pre;
+}
+
+/* ── token colours (default dark) ───────────────────────────────────────── */
+#fractured-json-page-root .tok-key {
+  color: #ffb86b;
+  font-weight: 600;
+}
+#fractured-json-page-root .tok-string {
+  color: #98c379;
+}
+#fractured-json-page-root .tok-number {
+  color: #ff79c6;
+}
+#fractured-json-page-root .tok-boolean {
+  color: #56b6c2;
+  font-weight: 600;
+}
+#fractured-json-page-root .tok-null {
+  color: #7d8799;
+  font-style: italic;
+}
+#fractured-json-page-root .tok-punct {
+  color: #c8ccd4;
+}
+#fractured-json-page-root .tok-comment {
+  color: #7a828f;
+  font-style: italic;
+}
+
+/* ── line numbers ────────────────────────────────────────────────────────── */
+#fractured-json-page-root #outputPre .line {
+  display: block;
+  padding-left: var(--gutter);
+  position: relative;
+}
+#fractured-json-page-root #outputPre .line::before {
+  counter-increment: linenumber;
+  content: counter(linenumber);
+  position: absolute;
+  left: 8px;
+  width: 36px;
+  text-align: right;
+  color: rgba(255, 255, 255, 0.15);
+  font-size: 12px;
+}
+#fractured-json-page-root.theme-light #outputPre .line::before {
+  color: #9ca3af;
+}
+#fractured-json-page-root.theme-cobalt #outputPre .line::before {
+  color: rgba(207, 238, 251, 0.12);
+}
+
+/* ── scrollbars ──────────────────────────────────────────────────────────── */
+#fractured-json-page-root #outputFrame::-webkit-scrollbar {
+  height: 10px;
+  width: 10px;
+}
+#fractured-json-page-root #outputFrame::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+}
+
+/* ── responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 520px) {
+  #fractured-json-page-root #fj-controls {
+    padding: 8px;
+    gap: 6px;
+  }
+  #fractured-json-page-root #fj-browser-window {
+    margin: 0 4px 8px;
+  }
+  #fractured-json-page-root textarea {
+    height: 150px;
+  }
+  #fractured-json-page-root #fj-addressbar {
+    max-width: 100%;
+  }
+}
