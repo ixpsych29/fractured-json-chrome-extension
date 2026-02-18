@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Fractured JSON — Formatter",
+  "description": "FracturedJson port — format JSON/JSONC (worker-based, handles large files).",
+  "version": "0.1.0",
+  "permissions": ["storage", "clipboardWrite"],
+  "host_permissions": [],
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["contentScript.js"],
+      "css": ["styles.css"],
+      "run_at": "document_end"
+    }
+  ],
+
+  "background": { "service_worker": "background.js", "type": "module" },
+
+  "web_accessible_resources": [
+    {
+      "resources": ["contentWorker.js", "styles.css"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

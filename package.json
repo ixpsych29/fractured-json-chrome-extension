@@ -1,0 +1,18 @@
+{
+  "name": "fracturedjson-chrome",
+  "version": "0.1.0",
+  "description": "Chrome extension port of FracturedJson (worker-based, supports large files)",
+  "license": "MIT",
+  "scripts": {
+    "build": "rm -rf dist && mkdir -p dist && esbuild src/contentScript.ts --bundle --platform=browser --format=esm --outfile=dist/contentScript.js --minify && esbuild src/contentWorker.ts --bundle --platform=browser --format=esm --outfile=dist/contentWorker.js --minify && esbuild src/background.ts --bundle --platform=browser --format=esm --outfile=dist/background.js --minify && cp src/styles.css dist/styles.css && cp manifest.json dist/manifest.json",
+    "dev": "rimraf dist && mkdir -p dist && esbuild src/contentScript.ts --bundle --platform=browser --format=esm --outfile=dist/contentScript.js --sourcemap --watch & esbuild src/contentWorker.ts --bundle --platform=browser --format=esm --outfile=dist/contentWorker.js --sourcemap --watch & esbuild src/background.ts --bundle --platform=browser --format=esm --outfile=dist/background.js --sourcemap --watch",
+    "package": "zip -r fracturedjson-chrome.zip dist"
+  },
+  "dependencies": {
+    "fracturedjsonjs": "*"
+  },
+  "devDependencies": {
+    "esbuild": "^0.18.0",
+    "rimraf": "^5.0.0"
+  }
+}
