@@ -2,43 +2,56 @@
    #fractured-json-page-root so the host page is not affected. */
 
 #fractured-json-page-root {
-  --accent: #2b7be4;
-  --bg: #0f1720;
-  --card: #0b1220;
-  --text: #e6eef8;
-  --gutter: 48px;
+  --accent:  #2b7be4;
+  --bg:      #0f1720;
+  --card:    #0b1220;
+  --text:    #e6eef8;
   /* browser-window chrome colours (dark defaults) */
   --bw-titlebar: #1c2333;
-  --bw-border: rgba(255, 255, 255, 0.07);
-  --bw-body: #0b1220;
-  --bw-bar-bg: rgba(255, 255, 255, 0.06);
-  --bw-bar-text: rgba(200, 215, 235, 0.55);
-  --bw-shadow: 0 8px 40px rgba(0, 0, 0, 0.55), 0 2px 8px rgba(0, 0, 0, 0.35);
+  --bw-border:   rgba(255,255,255,0.07);
+  --bw-body:     #0b1220;
+  --bw-bar-bg:   rgba(255,255,255,0.06);
+  --bw-bar-text: rgba(200,215,235,0.55);
+  --bw-shadow:   0 8px 40px rgba(0,0,0,0.55), 0 2px 8px rgba(0,0,0,0.35);
+  /* gutter column */
+  --gutter-bg:   rgba(0,0,0,0.22);
+  --gutter-sep:  rgba(255,255,255,0.06);
+  --gutter-text: rgba(180,200,230,0.22);
+  --gutter-hover:rgba(180,200,230,0.55);
+  --gutter-w:    52px;
 }
 
 /* ── themes ─────────────────────────────────────────────────────────────── */
 #fractured-json-page-root.theme-light {
-  --bg: #f0f2f5;
-  --card: #ffffff;
-  --text: #111827;
+  --bg:      #f0f2f5;
+  --card:    #ffffff;
+  --text:    #111827;
   --bw-titlebar: #e2e5ea;
-  --bw-border: rgba(0, 0, 0, 0.1);
-  --bw-body: #ffffff;
-  --bw-bar-bg: rgba(0, 0, 0, 0.06);
-  --bw-bar-text: rgba(60, 70, 90, 0.6);
-  --bw-shadow: 0 8px 40px rgba(0, 0, 0, 0.18), 0 2px 6px rgba(0, 0, 0, 0.1);
+  --bw-border:   rgba(0,0,0,0.10);
+  --bw-body:     #ffffff;
+  --bw-bar-bg:   rgba(0,0,0,0.06);
+  --bw-bar-text: rgba(60,70,90,0.60);
+  --bw-shadow:   0 8px 40px rgba(0,0,0,0.18), 0 2px 6px rgba(0,0,0,0.10);
+  --gutter-bg:   rgba(0,0,0,0.04);
+  --gutter-sep:  rgba(0,0,0,0.08);
+  --gutter-text: rgba(80,100,130,0.35);
+  --gutter-hover:rgba(80,100,130,0.75);
 }
 #fractured-json-page-root.theme-cobalt {
-  --bg: #001a2e;
-  --card: #002b3a;
-  --text: #cfeefb;
-  --accent: #4fd6ff;
+  --bg:      #001a2e;
+  --card:    #002b3a;
+  --text:    #cfeefb;
+  --accent:  #4fd6ff;
   --bw-titlebar: #002240;
-  --bw-border: rgba(79, 214, 255, 0.1);
-  --bw-body: #00162a;
-  --bw-bar-bg: rgba(79, 214, 255, 0.07);
-  --bw-bar-text: rgba(207, 238, 251, 0.45);
-  --bw-shadow: 0 8px 40px rgba(0, 0, 0, 0.65), 0 2px 8px rgba(0, 20, 40, 0.5);
+  --bw-border:   rgba(79,214,255,0.10);
+  --bw-body:     #00162a;
+  --bw-bar-bg:   rgba(79,214,255,0.07);
+  --bw-bar-text: rgba(207,238,251,0.45);
+  --bw-shadow:   0 8px 40px rgba(0,0,0,0.65), 0 2px 8px rgba(0,20,40,0.5);
+  --gutter-bg:   rgba(0,0,0,0.28);
+  --gutter-sep:  rgba(79,214,255,0.08);
+  --gutter-text: rgba(79,214,255,0.20);
+  --gutter-hover:rgba(79,214,255,0.60);
 }
 
 /* token colours — light overrides */
@@ -254,19 +267,95 @@
 
 #fractured-json-page-root #outputPre {
   margin:        0;
-  padding:       16px;
-  min-height:    100%;            /* at least fill the frame */
+  padding:       0;               /* gutter + code handle their own padding */
+  min-height:    100%;
   color:         var(--text);
   font-family:   ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', monospace;
   font-size:     12.5px;
   line-height:   1.45;
   white-space:   pre;
-  overflow:      visible;         /* let outputFrame handle scrolling */
+  overflow:      visible;
   counter-reset: linenumber;
   background:    transparent;
 }
 #fractured-json-page-root #outputPre code {
   display:    block;
+  white-space: pre;
+}
+
+/* ── premium two-column line-number layout ────────────────────────────────── */
+/* outer flex row — fills the pre */
+#fractured-json-page-root .fj-code-view {
+  display:    flex;
+  flex-direction: row;
+  min-height: 100%;
+  width:      100%;
+}
+
+/* gutter column */
+#fractured-json-page-root .fj-gutter {
+  display:         flex;
+  flex-direction:  column;
+  min-width:       var(--gutter-w, 52px);
+  width:           var(--gutter-w, 52px);
+  flex-shrink:     0;
+  padding:         16px 10px 16px 0;
+  background:      var(--gutter-bg);
+  border-right:    1px solid var(--gutter-sep);
+  /* subtle inner glow on the separator */
+  box-shadow:      inset -1px 0 0 0 var(--gutter-sep),
+                   1px 0 6px rgba(0,0,0,0.18);
+  user-select:     none;
+  position:        sticky;
+  left:            0;
+  z-index:         2;
+  /* top/bottom fade so numbers don't hard-clip */
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0px, black 20px,
+    black calc(100% - 20px), transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0px, black 20px,
+    black calc(100% - 20px), transparent 100%
+  );
+}
+
+/* individual line number */
+#fractured-json-page-root .fj-ln {
+  display:      block;
+  text-align:   right;
+  padding:      0 12px 0 8px;
+  font-size:    11px;
+  line-height:  1.45;             /* matches code line-height exactly */
+  color:        var(--gutter-text);
+  font-family:  ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  transition:   color 0.12s ease;
+  cursor:       default;
+}
+#fractured-json-page-root .fj-ln:hover {
+  color: var(--gutter-hover);
+}
+/* highlight every 5th line number slightly */
+#fractured-json-page-root .fj-ln:nth-child(5n) {
+  color: color-mix(in srgb, var(--gutter-text) 100%, var(--gutter-hover) 30%);
+}
+
+/* code column */
+#fractured-json-page-root .fj-code {
+  flex:        1;
+  min-width:   0;
+  padding:     16px;
+  overflow:    visible;
+}
+
+/* each code line */
+#fractured-json-page-root .line {
+  display:     block;
+  line-height: 1.45;
   white-space: pre;
 }
 
@@ -297,28 +386,7 @@
   font-style: italic;
 }
 
-/* ── line numbers ────────────────────────────────────────────────────────── */
-#fractured-json-page-root #outputPre .line {
-  display: block;
-  padding-left: var(--gutter);
-  position: relative;
-}
-#fractured-json-page-root #outputPre .line::before {
-  counter-increment: linenumber;
-  content: counter(linenumber);
-  position: absolute;
-  left: 8px;
-  width: 36px;
-  text-align: right;
-  color: rgba(255, 255, 255, 0.15);
-  font-size: 12px;
-}
-#fractured-json-page-root.theme-light #outputPre .line::before {
-  color: #9ca3af;
-}
-#fractured-json-page-root.theme-cobalt #outputPre .line::before {
-  color: rgba(207, 238, 251, 0.12);
-}
+/* ── line numbers (old ::before approach removed — see fj-gutter above) ────── */
 
 /* ── scrollbars ──────────────────────────────────────────────────────────── */
 #fractured-json-page-root #outputFrame::-webkit-scrollbar {

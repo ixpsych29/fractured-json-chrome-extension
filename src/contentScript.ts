@@ -698,20 +698,32 @@ declare const chrome: any;
       out += escapeHtml(text.slice(lastIndex));
 
       if (showLineNumbers) {
+        const lines = out.split('\n');
+        const total = lines.length;
+        const digits = String(total).length;
         if (useInlineStyles) {
-          // simple inline-number rendering so gutter appears even without CSS
-          return out
-            .split('\n')
+          // two-column inline fallback (no CSS classes needed)
+          const gutterStyle = `display:flex;flex-direction:column;min-width:${digits * 9 + 24}px;padding:16px 12px 16px 16px;text-align:right;background:rgba(0,0,0,0.18);border-right:1px solid rgba(255,255,255,0.06);user-select:none;flex-shrink:0;`;
+          const numStyle = `display:block;font-size:11.5px;line-height:1.45;color:rgba(255,255,255,0.2);font-family:ui-monospace,monospace;`;
+          const codeStyle = `display:block;padding:16px;flex:1;min-width:0;overflow:auto;`;
+          const gutterHtml = lines
+            .map((_, i) => `<span style="${numStyle}">${i + 1}</span>`)
+            .join('');
+          const codeHtml = lines
             .map(
-              (l, i) =>
-                `<span style="display:block;padding-left:48px;position:relative"><span style="position:absolute;left:8px;width:36px;text-align:right;color:rgba(255,255,255,0.15);font-size:12px">${i + 1}</span>${l || '&nbsp;'}</span>`,
+              (l) =>
+                `<span style="display:block;line-height:1.45;">${l || '&nbsp;'}</span>`,
             )
-            .join('\n');
+            .join('');
+          return `__TWOCOL__<div style="${gutterStyle}">${gutterHtml}</div><div style="${codeStyle}">${codeHtml}</div>__/TWOCOL__`;
         }
-        return out
-          .split('\n')
+        const gutterHtml = lines
+          .map((_, i) => `<span class="fj-ln">${i + 1}</span>`)
+          .join('');
+        const codeHtml = lines
           .map((l) => `<span class="line">${l || '&nbsp;'}</span>`)
-          .join('\n');
+          .join('');
+        return `__TWOCOL__<div class="fj-gutter">${gutterHtml}</div><div class="fj-code">${codeHtml}</div>__/TWOCOL__`;
       }
       return out;
     }
@@ -722,11 +734,17 @@ declare const chrome: any;
       showLineNumbers = false,
       useInlineStyles = false,
     ) {
-      container.innerHTML = highlightJsonToHtml(
-        text,
-        showLineNumbers,
-        useInlineStyles,
-      );
+      const raw = highlightJsonToHtml(text, showLineNumbers, useInlineStyles);
+      if (raw.startsWith('__TWOCOL__')) {
+        // two-column layout: wrap in fj-code-view, strip sentinels
+        const inner = raw.slice(
+          '__TWOCOL__'.length,
+          raw.lastIndexOf('__/TWOCOL__'),
+        );
+        container.innerHTML = `<div class="fj-code-view">${inner}</div>`;
+      } else {
+        container.innerHTML = raw;
+      }
     }
   } catch (err) {
     // silently fail — don't break regular pages

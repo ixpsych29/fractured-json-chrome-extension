@@ -30,7 +30,10 @@ self.onmessage = (ev) => {
         }
         // If caller requested highlighted HTML, produce it here (worker-side highlighting)
         if (msg.highlight) {
-          const html = highlightJsonToHtml(output, Boolean(msg.showLineNumbers));
+          const html = highlightJsonToHtml(
+            output,
+            Boolean(msg.showLineNumbers),
+          );
           (self as any).postMessage({ type: 'result', output, html });
         } else {
           (self as any).postMessage({ type: 'result', output });
@@ -40,10 +43,13 @@ self.onmessage = (ev) => {
       if (err instanceof FracturedJsonError) {
         const pos = (err as FracturedJsonError).InputPosition;
         let message = err.message;
-        if (pos) message += ` at row=${pos.Row+1}, col=${pos.Column+1}`;
+        if (pos) message += ` at row=${pos.Row + 1}, col=${pos.Column + 1}`;
         (self as any).postMessage({ type: 'error', message });
       } else {
-        (self as any).postMessage({ type: 'error', message: (err && err.message) ? err.message : String(err) });
+        (self as any).postMessage({
+          type: 'error',
+          message: err && err.message ? err.message : String(err),
+        });
       }
     }
   })();
@@ -59,19 +65,23 @@ function isKeyFollow(text: string, endIndex: number) {
   return text[i] === ':';
 }
 function highlightJsonToHtml(text: string, showLineNumbers: boolean) {
-  const tokenizer = /(\"(?:\\.|[^\"\\])*\")|(\/\/.*?$|\/\*[\s\S]*?\*\/)|\b(true|false|null)\b|-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?|[{}\[\],:]/gm;
+  const tokenizer =
+    /(\"(?:\\.|[^\"\\])*\")|(\/\/.*?$|\/\*[\s\S]*?\*\/)|\b(true|false|null)\b|-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?|[{}\[\],:]/gm;
   let lastIndex = 0;
   let out = '';
   for (const m of text.matchAll(tokenizer)) {
     const idx = m.index ?? 0;
     out += escapeHtml(text.slice(lastIndex, idx));
     const token = m[0];
-    if (m[1]) { // string
+    if (m[1]) {
+      // string
       const isKey = isKeyFollow(text, idx + token.length);
-      out += `<span class="${isKey? 'tok-key' : 'tok-string'}">${escapeHtml(token)}</span>`;
-    } else if (m[2]) { // comment
+      out += `<span class="${isKey ? 'tok-key' : 'tok-string'}">${escapeHtml(token)}</span>`;
+    } else if (m[2]) {
+      // comment
       out += `<span class="tok-comment">${escapeHtml(token)}</span>`;
-    } else if (m[3]) { // boolean/null
+    } else if (m[3]) {
+      // boolean/null
       out += `<span class="tok-boolean">${escapeHtml(token)}</span>`;
     } else if (/^-?\d/.test(token)) {
       out += `<span class="tok-number">${escapeHtml(token)}</span>`;
@@ -85,7 +95,14 @@ function highlightJsonToHtml(text: string, showLineNumbers: boolean) {
   out += escapeHtml(text.slice(lastIndex));
 
   if (showLineNumbers) {
-    return out.split('\n').map(l => `<span class="line">${l || '&nbsp;'}</span>`).join('\n');
+    const lines = out.split('\n');
+    const gutterHtml = lines
+      .map((_, i) => `<span class="fj-ln">${i + 1}</span>`)
+      .join('');
+    const codeHtml = lines
+      .map((l) => `<span class="line">${l || '&nbsp;'}</span>`)
+      .join('');
+    return `<div class="fj-code-view"><div class="fj-gutter">${gutterHtml}</div><div class="fj-code">${codeHtml}</div></div>`;
   }
   return out;
 }
