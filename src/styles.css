@@ -299,27 +299,15 @@
   min-width:       var(--gutter-w, 52px);
   width:           var(--gutter-w, 52px);
   flex-shrink:     0;
-  padding:         16px 10px 16px 0;
+  padding:         16px 0;
   background:      var(--gutter-bg);
   border-right:    1px solid var(--gutter-sep);
-  /* subtle inner glow on the separator */
   box-shadow:      inset -1px 0 0 0 var(--gutter-sep),
                    1px 0 6px rgba(0,0,0,0.18);
   user-select:     none;
-  position:        sticky;
-  left:            0;
-  z-index:         2;
-  /* top-only fade: numbers appear smoothly at the top edge when scrolled.
-     NOTE: NO bottom fade — a bottom mask on a very tall gutter (20K+ lines)
-     would hide the last portion of line numbers for large API responses. */
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    transparent 0px, black 16px
-  );
-  mask-image: linear-gradient(
-    to bottom,
-    transparent 0px, black 16px
-  );
+  /* NOTE: intentionally NOT position:sticky — sticky constrains the element's
+     painted height to the scroll-container viewport, so for large responses
+     (200+ or 20K+ lines) line numbers beyond one screenful simply vanish. */
 }
 
 
