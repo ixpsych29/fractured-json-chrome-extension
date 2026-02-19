@@ -95,14 +95,13 @@ function highlightJsonToHtml(text: string, showLineNumbers: boolean) {
   out += escapeHtml(text.slice(lastIndex));
 
   if (showLineNumbers) {
-    const lines = out.split('\n');
-    const gutterHtml = lines
-      .map((_, i) => `<span class="fj-ln">${i + 1}</span>`)
+    return out
+      .split('\n')
+      .map(
+        (l, i) =>
+          `<span class="line" data-ln="${i + 1}">${l || '&nbsp;'}</span>`,
+      )
       .join('');
-    const codeHtml = lines
-      .map((l) => `<span class="line">${l || '&nbsp;'}</span>`)
-      .join('');
-    return `<div class="fj-code-view"><div class="fj-gutter">${gutterHtml}</div><div class="fj-code">${codeHtml}</div></div>`;
   }
   return out;
 }

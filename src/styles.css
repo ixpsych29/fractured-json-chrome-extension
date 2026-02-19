@@ -267,7 +267,8 @@
 
 #fractured-json-page-root #outputPre {
   margin:        0;
-  padding:       0;               /* gutter + code handle their own padding */
+  padding:       16px;
+  padding-left:  16px;            /* default padding when NO line numbers */
   min-height:    100%;
   color:         var(--text);
   font-family:   ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', monospace;
@@ -275,7 +276,6 @@
   line-height:   1.45;
   white-space:   pre;
   overflow:      visible;
-  counter-reset: linenumber;
   background:    transparent;
 }
 #fractured-json-page-root #outputPre code {
@@ -283,73 +283,60 @@
   white-space: pre;
 }
 
-/* ── premium two-column line-number layout ────────────────────────────────── */
-/* outer flex row — fills the pre */
-#fractured-json-page-root .fj-code-view {
-  display:    flex;
-  flex-direction: row;
-  min-height: 100%;
-  width:      100%;
+/* ── line numbers (single-element, bulletproof for any line count) ────────── */
+/* When .line[data-ln] elements are present, pad the pre for the gutter
+   and paint the gutter column as a background gradient. */
+#fractured-json-page-root #outputPre:has(.line[data-ln]) {
+  padding-left:  calc(var(--gutter-w) + 16px);
+  /* painted gutter background — first column is solid, then a separator line */
+  background-image:
+    linear-gradient(to right, var(--gutter-bg), var(--gutter-bg)),
+    linear-gradient(to right, var(--gutter-sep), var(--gutter-sep));
+  background-size:
+    var(--gutter-w) 100%,       /* gutter fill */
+    1px 100%;                   /* 1px separator line */
+  background-position:
+    left top,
+    var(--gutter-w) top;
+  background-repeat: no-repeat;
 }
 
-/* gutter column */
-#fractured-json-page-root .fj-gutter {
-  display:         flex;
-  flex-direction:  column;
-  min-width:       var(--gutter-w, 52px);
-  width:           var(--gutter-w, 52px);
-  flex-shrink:     0;
-  padding:         16px 0;
-  background:      var(--gutter-bg);
-  border-right:    1px solid var(--gutter-sep);
-  box-shadow:      inset -1px 0 0 0 var(--gutter-sep),
-                   1px 0 6px rgba(0,0,0,0.18);
-  user-select:     none;
-  /* NOTE: intentionally NOT position:sticky — sticky constrains the element's
-     painted height to the scroll-container viewport, so for large responses
-     (200+ or 20K+ lines) line numbers beyond one screenful simply vanish. */
-}
-
-
-/* individual line number */
-#fractured-json-page-root .fj-ln {
-  display:      block;
-  text-align:   right;
-  padding:      0 12px 0 8px;
-  font-size:    11px;
-  /* IMPORTANT: line-height MUST be absolute, not relative, because font-size
-     here (11px) differs from the code font-size (12.5px in #outputPre).
-     Code computed line-height = 12.5 × 1.45 = 18.125px.  The gutter must
-     match exactly, or it drifts out of sync over thousands of lines. */
-  line-height:  18.125px;
-  color:        var(--gutter-text);
-  font-family:  ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.02em;
-  transition:   color 0.12s ease;
-  cursor:       default;
-}
-#fractured-json-page-root .fj-ln:hover {
-  color: var(--gutter-hover);
-}
-/* highlight every 5th line number slightly */
-#fractured-json-page-root .fj-ln:nth-child(5n) {
-  color: color-mix(in srgb, var(--gutter-text) 100%, var(--gutter-hover) 30%);
-}
-
-/* code column */
-#fractured-json-page-root .fj-code {
-  flex:        1;
-  min-width:   0;
-  padding:     16px;
-  overflow:    visible;
-}
-
-/* each code line */
+/* each code line — block-level, positioned so ::before can sit in the gutter */
 #fractured-json-page-root .line {
   display:     block;
   line-height: 1.45;
   white-space: pre;
+  position:    relative;
+}
+
+/* the line number itself — rendered from the data-ln attribute */
+#fractured-json-page-root .line[data-ln]::before {
+  content:      attr(data-ln);
+  position:     absolute;
+  /* sit inside the gutter column (which is at left edge of the pre) */
+  left:         calc(-1 * var(--gutter-w) - 16px);
+  width:        var(--gutter-w);
+  padding-right: 10px;
+  box-sizing:   border-box;
+  text-align:   right;
+  font-size:    11px;
+  line-height:  inherit;         /* same as the code line — can't drift */
+  color:        var(--gutter-text);
+  font-family:  ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  user-select:  none;
+  pointer-events: none;
+}
+
+/* subtle hover highlight on line numbers */
+#fractured-json-page-root .line[data-ln]:hover::before {
+  color: var(--gutter-hover);
+}
+
+/* every 5th line number is slightly brighter for easy scanning */
+#fractured-json-page-root .line[data-ln]:nth-child(5n)::before {
+  color: color-mix(in srgb, var(--gutter-text) 100%, var(--gutter-hover) 30%);
 }
 
 /* ── token colours (default dark) ───────────────────────────────────────── */
