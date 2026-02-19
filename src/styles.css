@@ -309,18 +309,19 @@
   position:        sticky;
   left:            0;
   z-index:         2;
-  /* top/bottom fade so numbers don't hard-clip */
+  /* top-only fade: numbers appear smoothly at the top edge when scrolled.
+     NOTE: NO bottom fade — a bottom mask on a very tall gutter (20K+ lines)
+     would hide the last portion of line numbers for large API responses. */
   -webkit-mask-image: linear-gradient(
     to bottom,
-    transparent 0px, black 20px,
-    black calc(100% - 20px), transparent 100%
+    transparent 0px, black 16px
   );
   mask-image: linear-gradient(
     to bottom,
-    transparent 0px, black 20px,
-    black calc(100% - 20px), transparent 100%
+    transparent 0px, black 16px
   );
 }
+
 
 /* individual line number */
 #fractured-json-page-root .fj-ln {
