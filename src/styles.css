@@ -156,7 +156,7 @@
 
 /* ── browser window shell — fills remaining height, content scrolls inside ── */
 #fractured-json-page-root #fj-browser-window {
-  margin:         0 14px 14px;    /* no top margin — controls bar provides spacing */
+  margin:         10px 14px 14px;    /* no top margin — controls bar provides spacing */
   border-radius:  12px;
   border:         1px solid var(--bw-border);
   box-shadow:     var(--bw-shadow);
