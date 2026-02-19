@@ -317,7 +317,11 @@
   text-align:   right;
   padding:      0 12px 0 8px;
   font-size:    11px;
-  line-height:  1.45;             /* matches code line-height exactly */
+  /* IMPORTANT: line-height MUST be absolute, not relative, because font-size
+     here (11px) differs from the code font-size (12.5px in #outputPre).
+     Code computed line-height = 12.5 × 1.45 = 18.125px.  The gutter must
+     match exactly, or it drifts out of sync over thousands of lines. */
+  line-height:  18.125px;
   color:        var(--gutter-text);
   font-family:  ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
   font-variant-numeric: tabular-nums;
