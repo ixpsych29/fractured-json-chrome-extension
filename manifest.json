@@ -1,26 +1,46 @@
 {
   "manifest_version": 3,
   "name": "Fractured JSON — Formatter",
-  "description": "FracturedJson port — format JSON/JSONC (worker-based, handles large files).",
-  "version": "0.1.0",
-  "permissions": ["storage", "clipboardWrite"],
-  "host_permissions": [],
-
+  "description": "Beautifully format & syntax-highlight JSON on any page. Powered by FracturedJson alignment.",
+  "version": "1.0.0",
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "*://*/*"
+  ],
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["contentScript.js"],
-      "css": ["styles.css"],
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "contentScript.js"
+      ],
+      "css": [
+        "styles.css"
+      ],
       "run_at": "document_end"
     }
   ],
-
-  "background": { "service_worker": "background.js", "type": "module" },
-
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
   "web_accessible_resources": [
     {
-      "resources": ["contentWorker.js", "styles.css"],
-      "matches": ["<all_urls>"]
+      "resources": [
+        "contentWorker.js",
+        "styles.css"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
     }
-  ]
+  ],
+  "icons": {
+    "16": "logo-16.png",
+    "48": "logo-48.png",
+    "128": "logo-128.png"
+  }
 }

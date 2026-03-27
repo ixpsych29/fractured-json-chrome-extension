@@ -1,0 +1,61 @@
+================================================================================
+CHROME WEB STORE LISTING — Fractured JSON Formatter
+================================================================================
+
+
+SHORT DESCRIPTION (132 characters max)
+────────────────────────────────────────
+Beautifully format & syntax-highlight JSON on any page — FracturedJson alignment, strict-CSP support, dark/light/cobalt themes.
+
+
+LONG DESCRIPTION
+────────────────────────────────────────
+Fractured JSON — Formatter automatically detects raw JSON pages and transforms them into a beautifully formatted, syntax-highlighted interactive viewer — right in your browser.
+
+⚡ Powered by FracturedJson Alignment
+Unlike basic pretty-printers that just indent JSON, this extension uses the FracturedJson algorithm to intelligently align values into readable columns. Short arrays stay on one line, related keys line up vertically, and large structures are expanded with consistent indentation. The result is JSON that's genuinely easy to read.
+
+🔒 Works on Strict-CSP Pages
+Many API endpoints (like api.github.com) block inline scripts and blob URLs with strict Content-Security-Policy headers. This extension handles those pages gracefully by falling back to its background service worker — so JSON formatting works everywhere, even on locked-down API responses.
+
+🎨 Three Beautiful Themes
+Choose from Dark, Light, or Cobalt themes. Each theme features carefully chosen token colours for keys, strings, numbers, booleans, and punctuation.
+
+🖥️ Clean Browser-Window UI
+Your formatted JSON is displayed inside an elegant, macOS-style browser window frame with traffic-light dots, an address bar showing the current URL, and a sticky toolbar for controls.
+
+📌 Key Features
+• Three format modes: Pretty-print, Minify, and Near-minify
+• Toggleable line numbers with a clean gutter
+• View raw JSON or switch back to formatted view with one click
+• Download formatted JSON as a .json file
+• Worker-based formatting — large files never freeze the browser
+• Persistent preferences saved across tabs and sessions
+• Handles Chrome's built-in JSON viewer with automatic detection
+
+🛡️ Privacy-First
+All processing happens locally in your browser. No data is collected, stored, or sent to external servers. Ever.
+
+HOW TO USE
+────────────────────────────────────────
+1. Install the extension from the Chrome Web Store.
+2. Navigate to any URL ending in .json or that displays a raw JSON string.
+   Examples:
+   • https://dummyjson.com/products
+   • https://jsonplaceholder.typicode.com/users
+   • https://api.github.com/users
+3. The extension automatically detects the JSON content and replaces it with the Fractured JSON viewer.
+4. Use the toolbar to switch between Pretty-print, Minify, and Near-minify modes.
+5. Toggle line numbers, change themes, view the raw source, or download the formatted output.
+
+That's it — no configuration needed. It just works.
+
+
+CATEGORY
+────────────────────────────────────────
+Developer Tools
+
+
+TAGS / KEYWORDS
+────────────────────────────────────────
+json, formatter, viewer, syntax highlighting, pretty print, developer tools, api, json viewer
