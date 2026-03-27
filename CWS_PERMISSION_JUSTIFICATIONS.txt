@@ -1,0 +1,109 @@
+================================================================================
+PERMISSION JUSTIFICATIONS — For Chrome Web Store Review
+================================================================================
+Paste these into the Developer Dashboard fields when prompted.
+
+================================================================================
+1. host_permissions: *://*/*
+================================================================================
+
+JUSTIFICATION (paste this):
+
+This extension is a JSON formatter that automatically detects and formats raw
+JSON responses on any web page. Because JSON APIs exist on arbitrary domains
+(e.g., api.github.com, dummyjson.com, jsonplaceholder.typicode.com, internal
+corporate APIs, localhost, etc.), the extension requires broad host access to
+inject its content script on all pages.
+
+The content script performs a lightweight, immediate check on every page:
+it inspects the document's MIME type (application/json) and DOM structure
+(single <pre> element, small DOM, or Chrome's built-in JSON viewer). If the
+page is NOT a JSON response, the script exits immediately within microseconds
+with zero further action — no DOM modifications, no network requests, no
+data access.
+
+Only when a page IS detected as raw JSON does the script:
+1. Read the JSON text from the page's existing DOM
+2. Format it locally using a Web Worker (off-thread)
+3. Replace the page with a syntax-highlighted viewer
+
+No data is ever collected, stored, or transmitted to external servers.
+The extension makes zero outbound network requests. All processing is local.
+
+A narrower permission set is not feasible because:
+- JSON APIs exist on every possible domain and subdomain
+- Users cannot predict which domains will serve JSON before visiting them
+- Requiring manual per-domain activation would defeat the core value:
+  automatic, instant JSON formatting on any page
+
+================================================================================
+2. content_scripts → matches: <all_urls>
+================================================================================
+
+JUSTIFICATION (paste this):
+
+The content script is declared with "matches": ["<all_urls>"] because the
+extension must detect JSON responses on any domain. JSON can be served by
+any URL on any domain — there is no fixed set of domains that serve JSON.
+
+The content script is designed for minimal impact on non-JSON pages:
+- It runs at "document_end" (after the page has loaded)
+- It performs a quick heuristic check (~5 lines of code) to detect JSON
+- If the page is not JSON, it returns immediately with no side effects
+- It does not modify the DOM, inject styles, or perform any action on
+  non-JSON pages
+
+This is the standard approach used by all major JSON viewer extensions
+(e.g., JSON Viewer, JSON Formatter) on the Chrome Web Store.
+
+================================================================================
+3. storage
+================================================================================
+
+JUSTIFICATION (paste this):
+
+The "storage" permission is used to persist user preferences (selected theme,
+format mode, line-number toggle) across browser sessions using
+chrome.storage.local. This data is stored entirely on the user's device
+and is never transmitted externally.
+
+================================================================================
+4. web_accessible_resources
+================================================================================
+
+JUSTIFICATION (paste this):
+
+The extension declares contentWorker.js and styles.css as web-accessible
+resources so the content script can load the formatting Web Worker and the
+viewer stylesheet from extension-internal URLs (chrome-extension://...).
+This is required because the content script runs in the context of the web
+page and needs to reference these extension files. The resources contain
+no sensitive data — they are the formatting logic and CSS styles.
+
+================================================================================
+5. Privacy Practices Tab — Quick Answers
+================================================================================
+
+Does your extension collect or use any of these types of data?
+
+  Personally identifiable information:       NO
+  Health information:                         NO
+  Financial and payment information:          NO
+  Authentication information:                 NO
+  Personal communications:                    NO
+  Location:                                   NO
+  Web history:                                NO
+  User activity:                              NO
+  Website content:                            NO (*)
+
+  (*) The extension reads the text content of the current page ONLY when
+      the page is detected as raw JSON, and ONLY to format it locally.
+      It does not store, transmit, or collect this content. However, if
+      the reviewer considers "reading page text to format it" as accessing
+      website content, answer YES and add this clarification:
+      "The extension reads page text to detect and format JSON responses.
+       Processing is entirely local. No content is stored or transmitted."
+
+Does your extension transmit data to any remote server?  NO
+
+Does your extension use remote code?                     NO

@@ -1,63 +1,74 @@
-# Privacy Policy — Fractured JSON Formatter
+# Privacy Policy
 
+**Extension:** Fractured JSON — Formatter  
 **Effective date:** March 27, 2026  
-**Extension name:** Fractured JSON — Formatter  
 **Developer:** ixpsych29
 
 ---
 
-## Overview
+## Single-Sentence Summary
 
-Fractured JSON — Formatter is a Chrome extension that detects and beautifully formats raw JSON content on web pages you visit. This privacy policy explains how the extension handles your data.
+**All JSON processing happens locally in your browser. This extension does not collect, store, or transmit any user data to any external server.**
+
+---
+
+## What This Extension Does
+
+Fractured JSON — Formatter detects web pages that contain raw JSON and replaces them with a formatted, syntax-highlighted viewer. The entire process — detection, parsing, formatting, and rendering — runs **100% locally** inside your browser using a Web Worker and the extension's service worker. No data is sent anywhere.
 
 ## Data Collection
 
-**This extension does NOT collect, store, or transmit any user data to external servers.**
+This extension collects **zero** user data. Specifically:
 
-Specifically:
+| Category | Collected? | Details |
+|---|---|---|
+| Personal information | ❌ No | No names, emails, accounts, or identifiers are accessed |
+| Browsing history | ❌ No | The extension does not record which pages you visit |
+| Page content | ❌ No | JSON is read from the page DOM and processed in-memory only; it is never stored or transmitted |
+| Analytics / telemetry | ❌ No | No usage tracking, crash reporting, or event logging of any kind |
+| Cookies / tracking | ❌ No | No cookies are set and no tracking mechanisms are used |
+| Network requests to third parties | ❌ No | The extension makes **zero** outbound network requests |
 
-- **No analytics or telemetry** is collected.
-- **No personal information** (name, email, browsing history, etc.) is gathered.
-- **No network requests** are made to any third-party server.
-- **No cookies or tracking** mechanisms are used.
+## How JSON Processing Works
 
-## How Data Is Processed
-
-All JSON formatting and syntax highlighting is performed **locally in your browser**. The extension:
-
-1. Detects pages that serve raw JSON content (based on MIME type and page structure).
-2. Parses and reformats the JSON using the [FracturedJson](https://github.com/j-brooke/FracturedJson) library, running entirely within a local Web Worker or the extension's background service worker.
-3. Replaces the raw JSON view with a syntax-highlighted, interactive viewer.
-
-**No data ever leaves your device.**
+1. The content script checks whether the current page contains raw JSON (by inspecting the MIME type and DOM structure).
+2. If the page is **not** JSON, the script exits immediately with no further action.
+3. If JSON is detected, it is read from the page's existing DOM text (or re-fetched from the same URL when Chrome's built-in viewer obscures it).
+4. The JSON is formatted using the FracturedJson library, running inside a local Web Worker (or the extension's background service worker as a fallback).
+5. The formatted output is rendered directly into the page. **At no point does the JSON leave the browser.**
 
 ## Permissions Explained
 
-| Permission | Purpose |
+| Permission | Why It's Needed |
 |---|---|
-| `storage` | Saves your local preferences (theme, format mode, line numbers) across browser sessions. Data is stored locally via `chrome.storage.local` and never transmitted. |
-| `host_permissions` (`*://*/*`) | Allows the content script to run on any page so the extension can detect and format JSON responses regardless of the domain. **No data from these pages is collected or sent externally.** |
+| **`storage`** | Persists your local preferences (theme, format mode, line-number toggle) across sessions via `chrome.storage.local`. This data stays on your device and is never transmitted. |
+| **`host_permissions: *://*/*`** | Required so the content script can run on any page to detect JSON responses. JSON APIs exist on arbitrary domains, so the extension needs broad host access. **No data from these pages is collected or sent externally.** The content script performs a lightweight check and exits immediately on non-JSON pages. |
 
-## Local Storage
+## Local Storage Details
 
-The extension uses `chrome.storage.local` to persist the following user preferences:
+The extension stores the following preferences locally via `chrome.storage.local`:
 
-- Selected theme (Dark / Light / Cobalt)
+- Theme selection (Dark / Light / Cobalt)
 - Format mode (Pretty-print / Minify / Near-minify)
-- Line number visibility toggle
-- Auto-format enabled/disabled
-- Domain whitelist (user-configured)
+- Line-number visibility
+- Auto-format toggle
+- Domain whitelist
 
-This data is stored entirely on your device and is never shared.
+All preferences are stored entirely on your device and are never shared or transmitted.
 
 ## Third-Party Services
 
-This extension does **not** integrate with or send data to any third-party services, APIs, or servers.
+This extension does **not** use, integrate with, or communicate with any third-party services, APIs, analytics platforms, or remote servers.
+
+## Remote Code
+
+This extension does **not** execute any remotely-hosted code. All JavaScript is bundled at build time and included in the extension package.
 
 ## Changes to This Policy
 
-If this privacy policy is updated, the changes will be reflected in the extension's repository and Chrome Web Store listing. The effective date at the top of this document will be updated accordingly.
+Updates to this policy will be reflected in the extension's GitHub repository and Chrome Web Store listing. The effective date above will be updated accordingly.
 
 ## Contact
 
-If you have questions or concerns about this privacy policy, please open an issue on the [GitHub repository](https://github.com/ixpsych29/fractured-json-chrome-extension) or contact the developer directly.
+For questions or concerns about this privacy policy, please open an issue at:  
+**https://github.com/ixpsych29/fractured-json-chrome-extension/issues**

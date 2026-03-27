@@ -3,6 +3,7 @@
   "name": "Fractured JSON — Formatter",
   "description": "Beautifully format & syntax-highlight JSON on any page. Powered by FracturedJson alignment.",
   "version": "1.0.0",
+  "minimum_chrome_version": "116",
   "permissions": [
     "storage"
   ],
