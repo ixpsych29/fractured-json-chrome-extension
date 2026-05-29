@@ -6,10 +6,10 @@
   "scripts": {
     "build": "rm -rf dist && mkdir -p dist && esbuild src/contentScript.ts --bundle --platform=browser --format=esm --outfile=dist/contentScript.js --minify && esbuild src/contentWorker.ts --bundle --platform=browser --format=esm --outfile=dist/contentWorker.js --minify && esbuild src/background.ts --bundle --platform=browser --format=esm --outfile=dist/background.js --minify && cp src/styles.css dist/styles.css && cp manifest.json dist/manifest.json && cp logo-*.png dist/",
     "dev": "rimraf dist && mkdir -p dist && cp src/styles.css dist/styles.css && cp manifest.json dist/manifest.json && cp logo-*.png dist/ && esbuild src/contentScript.ts --bundle --platform=browser --format=esm --outfile=dist/contentScript.js --sourcemap --watch & esbuild src/contentWorker.ts --bundle --platform=browser --format=esm --outfile=dist/contentWorker.js --sourcemap --watch & esbuild src/background.ts --bundle --platform=browser --format=esm --outfile=dist/background.js --sourcemap --watch",
+    "zip": "pnpm build && cd dist && zip -r ../fractured-json-v$(node -p \"require('../package.json').version\").zip . && cd .. && echo \"✅ Created fractured-json-v$(node -p \"require('./package.json').version\").zip\"",
     "icons": "bash scripts/export-icons.sh",
     "package": "bash scripts/package.sh"
   },
-
   "dependencies": {
     "fracturedjsonjs": "^5.0.1"
   },

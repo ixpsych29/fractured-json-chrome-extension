@@ -17,6 +17,16 @@ declare const chrome: any;
     const isJsonMime = /\b(json|javascript)\b/i.test(contentType);
     const firstPre = body.querySelector('pre');
 
+    // EXCLUSION: Laravel/Symfony dd() or other common debug dumpers.
+    // These tools have their own interactive UI; if we detect them, we skip formatting.
+    const isDebugPage = !!(
+      body.querySelector('.sf-dump') ||
+      body.querySelector('[id^="sf-dump"]') ||
+      body.querySelector('.xdebug-var-dump') ||
+      body.querySelector('.phpdebugbar')
+    );
+    if (isDebugPage) return;
+
     // Chrome's native JSON viewer wraps content in a <json-formatter> or similar custom element.
     // Detect it by looking for known Chrome JSON viewer elements.
     const chromeJsonViewer =
@@ -89,6 +99,7 @@ declare const chrome: any;
     // NOTE: some API pages (strict CSP) can block external extension CSS —
     // we detect that and fall back to inline-styles for token colouring.
     const cssUrl = chrome.runtime.getURL('styles.css');
+    const logoUrl = chrome.runtime.getURL('logo-48.png');
     const link = document.createElement('link');
     link.rel = 'stylesheet';
     link.href = cssUrl;
@@ -108,20 +119,56 @@ declare const chrome: any;
     wrapper.id = 'fractured-json-page-root';
     wrapper.innerHTML = `
       <div id="fj-controls">
-        <strong>Fractured JSON</strong>
+        <div class="fj-left-group" style="display:flex; gap:16px; align-items:center;">
+          <div class="fj-brand">
+            <img src="${logoUrl}" alt="Fractured JSON" width="18" height="18" style="border-radius: 4px;" />
+            <strong>Fractured JSON</strong>
+          </div>
 
-        <div style="display:flex;gap:8px;align-items:center;">
-          <label><input name="fj-mode" type="radio" value="reformat" checked /> Pretty‑print</label>
-          <label><input name="fj-mode" type="radio" value="minify" /> Minify</label>
-          <label><input name="fj-mode" type="radio" value="near-minify" /> Near‑minify</label>
+          <div class="fj-mode-group-inner" style="display:flex;gap:8px;align-items:center;">
+            <label><input name="fj-mode" type="radio" value="reformat" checked />
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg>
+              Pretty
+            </label>
+            <label><input name="fj-mode" type="radio" value="minify" />
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14h6v6"></path><path d="M20 10h-6V4"></path><path d="M14 10l7-7"></path><path d="M3 21l7-7"></path></svg>
+              Minify
+            </label>
+            <label><input name="fj-mode" type="radio" value="near-minify" />
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+              Near-min
+            </label>
+          </div>
         </div>
 
-        <label style="margin-left:auto;"><input id="fj-line-toggle" type="checkbox" /> Line numbers</label>
-        <label>Theme: <select id="fj-theme-select"><option value="dark">Dark</option><option value="light">Light</option><option value="cobalt">Cobalt</option></select></label>
+        <div class="fj-right-group" style="display:flex; gap:12px; align-items:center; margin-left:auto;">
+          <span id="fj-status" style="color:#9aa4b2;font-size:12px"></span>
+          <label class="fj-line-lbl"><input id="fj-line-toggle" type="checkbox" /> 
+             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+             Line numbers
+          </label>
+          <label class="fj-theme-lbl">
+             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+             Theme:
+             <div class="fj-select-wrap">
+               <select id="fj-theme-select"><option value="dark">Dark</option><option value="light">Light</option><option value="cobalt">Cobalt</option></select>
+               <svg class="fj-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+             </div>
+          </label>
 
-        <button id="fj-view-raw">View raw</button>
-        <button id="fj-download">Download</button>
-        <span id="fj-status" style="margin-left:8px;color:#9aa4b2;font-size:12px"></span>
+          <button id="fj-view-raw">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+            View raw
+          </button>
+          <button id="fj-download">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            Download
+          </button>
+          <button id="fj-copy">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            Copy
+          </button>
+        </div>
       </div>
 
       <div id="fj-browser-window">
@@ -132,20 +179,16 @@ declare const chrome: any;
             <span class="fj-dot fj-dot-green"  title="Maximise"></span>
           </div>
           <div id="fj-addressbar">
-            <svg id="fj-lock-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="4" y="7" width="8" height="6" rx="1.2" stroke="currentColor" stroke-width="1.3"/>
-              <path d="M5.5 7V5.5a2.5 2.5 0 0 1 5 0V7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
-            </svg>
             <span id="fj-url-display"></span>
           </div>
         </div>
         <div id="fj-browser-body">
           <div id="outputFrame">
             <pre id="outputPre"></pre>
+            <textarea id="fj-raw-output" style="display:none"></textarea>
           </div>
         </div>
       </div>
-      <textarea id="fj-raw-output" style="display:none"></textarea>
     `;
 
     // Replace/overlay document contents safely (handles Chrome JSON viewer and text-node pages)
@@ -179,6 +222,19 @@ declare const chrome: any;
       /* ignore */
     }
     (document.body || document.documentElement).appendChild(wrapper);
+
+    // Update the browser tab favicon to the extension logo
+    try {
+      let iconLink = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
+      if (!iconLink) {
+        iconLink = document.createElement('link');
+        iconLink.rel = 'icon';
+        document.head.appendChild(iconLink);
+      }
+      iconLink.href = chrome.runtime.getURL('logo-16.png');
+    } catch (e) {
+      /* ignore */
+    }
 
     // populate the browser-chrome address bar with the real page URL
     const urlDisplay = document.getElementById('fj-url-display');
@@ -215,6 +271,9 @@ declare const chrome: any;
     const downloadBtn = document.getElementById(
       'fj-download',
     ) as HTMLButtonElement;
+    const copyBtn = document.getElementById(
+      'fj-copy',
+    ) as HTMLButtonElement;
     const modeRadios = wrapper.querySelectorAll(
       'input[name="fj-mode"]',
     ) as NodeListOf<HTMLInputElement>;
@@ -229,6 +288,8 @@ declare const chrome: any;
 
     // set up formatter + UI wiring so buttons work even if auto-format/whitelist prevents the automatic run
     let currentMode = 'reformat';
+    let lastFormattedOutput = rawText;
+    let lastRenderedMode = '';
 
     // Helper: send message to background and return a Promise (avoids the callback-based
     // "message port closed" warning and makes error handling cleaner).
@@ -258,22 +319,29 @@ declare const chrome: any;
 
     const doFormat = async (mode: string, showLines: boolean) => {
       console.debug('FracturedJson: doFormat', mode, { showLines });
-      // immediate preview so user sees data before worker finishes
-      rawArea.value = rawText;
+      
+      const isModeChange = (mode !== lastRenderedMode);
+      
       const PREVIEW_THRESHOLD = 200_000;
-      if (rawText.length <= PREVIEW_THRESHOLD) {
-        // attempt quick client-side highlight as a preview (use inline styles so CSP can't hide colours)
-        try {
-          renderHighlighted(rawText, outputPre, showLines, true);
-        } catch (e) {
-          outputPre.textContent = rawText;
+      if (!isModeChange) {
+        if (lastFormattedOutput.length <= PREVIEW_THRESHOLD) {
+          // attempt quick client-side highlight as a preview without touching worker output
+          try {
+            renderHighlighted(lastFormattedOutput, outputPre, showLines, !cssLoaded);
+          } catch (e) {
+            outputPre.textContent = lastFormattedOutput;
+          }
+        } else {
+          outputPre.textContent = lastFormattedOutput;
         }
       } else {
-        // for very large payloads, show plain text preview quickly
-        outputPre.textContent = rawText;
+        // A mode change means we wait for the worker to provide new JSON layout.
+        // We fade the container slightly so the user sees something is happening,
+        // avoiding the flashy HTML-to-inline-styles glimpse.
+        outputPre.style.opacity = '0.5';
       }
 
-      statusEl.textContent = 'Formatting… (preview shown)';
+      statusEl.textContent = 'Formatting…';
 
       // Strategy: Try a direct extension-URL Worker first (works on most pages).
       // If that fails (cross-origin or CSP), skip blob-URL fallbacks entirely —
@@ -312,19 +380,25 @@ declare const chrome: any;
             return;
           }
           if (resp.type === 'result') {
-            rawArea.value = resp.output || rawText;
+            lastFormattedOutput = resp.output || rawText;
+            rawArea.value = lastFormattedOutput;
+            lastRenderedMode = mode;
+            outputPre.style.opacity = '1';
             try {
               renderHighlighted(
-                resp.output || rawText,
+                lastFormattedOutput,
                 outputPre,
                 showLines,
                 !cssLoaded,
               );
             } catch (err) {
-              outputPre.textContent = resp.output || rawText;
+              outputPre.textContent = lastFormattedOutput;
             }
             statusEl.textContent = '';
           } else if (resp.type === 'error') {
+            lastFormattedOutput = rawText;
+            lastRenderedMode = mode;
+            outputPre.style.opacity = '1';
             statusEl.textContent = 'Parse error — showing raw';
             outputPre.textContent = rawText;
             rawArea.value = rawText;
@@ -395,7 +469,10 @@ declare const chrome: any;
         const msg = ev.data;
         if (!msg) return;
         if (msg.type === 'result') {
-          rawArea.value = msg.output || rawText;
+          lastFormattedOutput = msg.output || rawText;
+          rawArea.value = lastFormattedOutput;
+          lastRenderedMode = mode;
+          outputPre.style.opacity = '1';
 
           // replace preview with worker-produced highlighted HTML if available
           if (msg.html) {
@@ -405,31 +482,34 @@ declare const chrome: any;
               // worker produced HTML but page CSS is blocked — render using inline styles instead
               try {
                 renderHighlighted(
-                  msg.output || rawText,
+                  lastFormattedOutput,
                   outputPre,
                   showLines,
                   true,
                 );
               } catch (err) {
-                outputPre.textContent = msg.output || rawText;
+                outputPre.textContent = lastFormattedOutput;
               }
             }
           } else {
             // worker returned plain output — render highlighted, prefer inline styles when CSS not present
             try {
               renderHighlighted(
-                msg.output || rawText,
+                lastFormattedOutput,
                 outputPre,
                 showLines,
                 !cssLoaded,
               );
             } catch (err) {
-              outputPre.textContent = msg.output || rawText;
+              outputPre.textContent = lastFormattedOutput;
             }
           }
 
           statusEl.textContent = '';
         } else if (msg.type === 'error') {
+          lastFormattedOutput = rawText;
+          lastRenderedMode = mode;
+          outputPre.style.opacity = '1';
           statusEl.textContent = 'Parse error — showing raw';
           outputPre.textContent = rawText;
           rawArea.value = rawText;
@@ -578,8 +658,8 @@ declare const chrome: any;
       // toggle raw / pretty
       if (rawArea.style.display === 'none') {
         rawArea.style.display = 'block';
-        rawArea.style.width = 'calc(100% - 28px)';
-        rawArea.style.height = '500px';
+        rawArea.style.width = '100%';
+        rawArea.style.height = '100%';
         outputPre.style.display = 'none';
         viewRawBtn.textContent = 'Pretty';
       } else {
@@ -599,6 +679,32 @@ declare const chrome: any;
         (location.pathname.split('/').pop() || 'fractured') + '.json';
       a.click();
       URL.revokeObjectURL(url);
+    });
+
+    copyBtn.addEventListener('click', async () => {
+      const text = rawArea.value || rawText;
+      try {
+        await navigator.clipboard.writeText(text);
+        const originalText = copyBtn.innerHTML;
+        copyBtn.innerHTML = `
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Copied!
+        `;
+        copyBtn.style.borderColor = 'var(--accent)';
+        copyBtn.style.color = 'var(--accent)';
+        setTimeout(() => {
+          copyBtn.innerHTML = originalText;
+          copyBtn.style.borderColor = '';
+          copyBtn.style.color = '';
+        }, 2000);
+      } catch (err) {
+        console.error('Failed to copy text: ', err);
+        const originalText = copyBtn.innerHTML;
+        copyBtn.innerHTML = 'Error!';
+        setTimeout(() => {
+          copyBtn.innerHTML = originalText;
+        }, 2000);
+      }
     });
 
     // --- simple syntax highlight (copied & adapted from popup) ---

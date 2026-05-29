@@ -1,396 +1,498 @@
-/* Scoped styles for the in‑page Fractured JSON viewer. All selectors are intentionally namespaced under
+/* Scoped styles for the in-page Fractured JSON viewer. All selectors are intentionally namespaced under
    #fractured-json-page-root so the host page is not affected. */
 
 #fractured-json-page-root {
-  --accent:  #2b7be4;
-  --bg:      #0f1720;
-  --card:    #0b1220;
-  --text:    #e6eef8;
+  --accent: #2b7be4;
+  --accent-fg: #ffffff;
+  --accent-bg-alpha: rgba(43, 123, 228, 0.15);
+  --accent-border-alpha: rgba(43, 123, 228, 0.3);
+  --accent-shadow: rgba(43, 123, 228, 0.4);
+  --bg: #0f1720;
+  --card: #18212f;
+  --text: #e6eef8;
   /* browser-window chrome colours (dark defaults) */
   --bw-titlebar: #1c2333;
-  --bw-border:   rgba(255,255,255,0.07);
-  --bw-body:     #0b1220;
-  --bw-bar-bg:   rgba(255,255,255,0.06);
-  --bw-bar-text: rgba(200,215,235,0.55);
-  --bw-shadow:   0 8px 40px rgba(0,0,0,0.55), 0 2px 8px rgba(0,0,0,0.35);
+  --bw-border: rgba(255, 255, 255, 0.07);
+  --bw-body: #0b1220;
+  --bw-bar-bg: rgba(255, 255, 255, 0.06);
+  --bw-bar-text: rgba(200, 215, 235, 0.55);
+  --bw-shadow: 0 8px 40px rgba(0, 0, 0, 0.55), 0 2px 8px rgba(0, 0, 0, 0.35);
   /* gutter column */
-  --gutter-bg:   rgba(0,0,0,0.22);
-  --gutter-sep:  rgba(255,255,255,0.06);
-  --gutter-text: rgba(180,200,230,0.22);
-  --gutter-hover:rgba(180,200,230,0.55);
-  --gutter-w:    52px;
+  --gutter-bg: rgba(0, 0, 0, 0.22);
+  --gutter-sep: rgba(255, 255, 255, 0.06);
+  --gutter-text: rgba(180, 200, 230, 0.22);
+  --gutter-hover: rgba(180, 200, 230, 0.55);
+  --gutter-w: 52px;
+  /* highlight token defaults */
+  --tok-key: #ffb86b;
+  --tok-string: #98c379;
+  --tok-number: #ff79c6;
+  --tok-boolean: #56b6c2;
+  --tok-punct: #c8ccd4;
+  --tok-comment: #7a828f;
 }
 
 /* ── themes ─────────────────────────────────────────────────────────────── */
 #fractured-json-page-root.theme-light {
-  --bg:      #f0f2f5;
-  --card:    #ffffff;
-  --text:    #111827;
-  --bw-titlebar: #e2e5ea;
-  --bw-border:   rgba(0,0,0,0.10);
-  --bw-body:     #ffffff;
-  --bw-bar-bg:   rgba(0,0,0,0.06);
-  --bw-bar-text: rgba(60,70,90,0.60);
-  --bw-shadow:   0 8px 40px rgba(0,0,0,0.18), 0 2px 6px rgba(0,0,0,0.10);
-  --gutter-bg:   rgba(0,0,0,0.04);
-  --gutter-sep:  rgba(0,0,0,0.08);
-  --gutter-text: rgba(80,100,130,0.35);
-  --gutter-hover:rgba(80,100,130,0.75);
+  --bg: #e2e8f0;
+  --card: #f1f5f9;
+  --text: #1f2937;
+  --bw-titlebar: #e2e8f0;
+  --bw-border: rgba(0, 0, 0, 0.08);
+  --bw-body: #f4f6f8;
+  --bw-bar-bg: rgba(0, 0, 0, 0.04);
+  --bw-bar-text: rgba(55, 65, 81, 0.7);
+  --bw-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  --gutter-bg: rgba(0, 0, 0, 0.02);
+  --gutter-sep: rgba(0, 0, 0, 0.06);
+  --gutter-text: rgba(107, 114, 128, 0.5);
+  --gutter-hover: rgba(17, 24, 39, 0.8);
+  --tok-key: #b7791f;
+  --tok-string: #2f855a;
+  --tok-number: #b83280;
+  --tok-boolean: #117a8b;
+  --tok-punct: #374151;
+  --tok-comment: #6b7280;
 }
+
 #fractured-json-page-root.theme-cobalt {
-  --bg:      #001a2e;
-  --card:    #002b3a;
-  --text:    #cfeefb;
-  --accent:  #4fd6ff;
+  --bg: #001a2e;
+  --card: #002b3a;
+  --text: #cfeefb;
+  --accent: #4fd6ff;
+  --accent-fg: #001a2e;
+  --accent-bg-alpha: rgba(79, 214, 255, 0.15);
+  --accent-border-alpha: rgba(79, 214, 255, 0.3);
+  --accent-shadow: rgba(79, 214, 255, 0.4);
   --bw-titlebar: #002240;
-  --bw-border:   rgba(79,214,255,0.10);
-  --bw-body:     #00162a;
-  --bw-bar-bg:   rgba(79,214,255,0.07);
-  --bw-bar-text: rgba(207,238,251,0.45);
-  --bw-shadow:   0 8px 40px rgba(0,0,0,0.65), 0 2px 8px rgba(0,20,40,0.5);
-  --gutter-bg:   rgba(0,0,0,0.28);
-  --gutter-sep:  rgba(79,214,255,0.08);
-  --gutter-text: rgba(79,214,255,0.20);
-  --gutter-hover:rgba(79,214,255,0.60);
+  --bw-border: rgba(79, 214, 255, 0.15);
+  --tok-key: #ffd580;
+  --tok-string: #95e454;
+  --tok-number: #fd8bff;
+  --tok-boolean: #4fd6ff;
+  --tok-punct: #cfeefb;
+  --tok-comment: #7790a0;
 }
 
-/* token colours — light overrides */
-#fractured-json-page-root.theme-light #outputPre {
-  background: #ffffff;
-  color: #111827;
-}
-#fractured-json-page-root.theme-light .tok-key {
-  color: #b7791f;
-}
-#fractured-json-page-root.theme-light .tok-string {
-  color: #2f855a;
-}
-#fractured-json-page-root.theme-light .tok-number {
-  color: #b83280;
-}
-#fractured-json-page-root.theme-light .tok-boolean {
-  color: #117a8b;
-}
-#fractured-json-page-root.theme-light .tok-comment {
-  color: #6b7280;
-}
-
-/* token colours — cobalt overrides */
-#fractured-json-page-root.theme-cobalt #outputPre {
-  background: linear-gradient(180deg, #00162a, #002240);
-}
-#fractured-json-page-root.theme-cobalt .tok-key {
-  color: #ffd580;
-}
-#fractured-json-page-root.theme-cobalt .tok-string {
-  color: #95e454;
-}
-#fractured-json-page-root.theme-cobalt .tok-number {
-  color: #fd8bff;
-}
-#fractured-json-page-root.theme-cobalt .tok-boolean {
-  color: #4fd6ff;
-}
-#fractured-json-page-root.theme-cobalt .tok-comment {
-  color: #7790a0;
-}
-
-/* ── page root — full-viewport flex column so only JSON content scrolls ─── */
+/* ── layout ──────────────────────────────────────────────────────────────── */
 #fractured-json-page-root {
-  font-family:    Inter, 'Segoe UI', Helvetica, Arial, sans-serif;
-  color:          var(--text);
-  background:     var(--bg);
-  height:         100vh;          /* fill the viewport exactly */
-  overflow:       hidden;         /* prevent the page itself from scrolling */
-  display:        flex;
-  flex-direction: column;
-  box-sizing:     border-box;
-  position:       relative;
-}
-
-/* ── controls toolbar — sticky header, never scrolls away ───────────────── */
-#fractured-json-page-root #fj-controls {
-  flex-shrink:     0;             /* never shrink — always visible */
-  padding:         10px 14px;
-  display:         flex;
-  flex-wrap:       wrap;
-  align-items:     center;
-  gap:             10px;
-  background:      var(--bg);     /* solid base so content doesn't bleed through */
-  /* frosted-glass shimmer when JSON scrolls under it */
-  backdrop-filter: blur(12px) saturate(1.4);
-  -webkit-backdrop-filter: blur(12px) saturate(1.4);
-  border-bottom:   1px solid var(--bw-border);
-  z-index:         10;
-}
-#fractured-json-page-root strong {
-  font-weight: 600;
-}
-#fractured-json-page-root label {
-  font-size: 13px;
-}
-#fractured-json-page-root input[type='checkbox'],
-#fractured-json-page-root input[type='radio'] {
-  margin-right: 6px;
-  accent-color: var(--accent);
-}
-#fractured-json-page-root select {
-  padding: 6px 8px;
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  background: var(--card) !important;
-  color: var(--text) !important;
-}
-#fractured-json-page-root select option {
-  background: var(--card) !important;
-  color: var(--text) !important;
-}
-#fractured-json-page-root button {
-  padding: 6px 8px;
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  background: transparent;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   color: var(--text);
-  cursor: pointer;
-}
-
-/* ── browser window shell — fills remaining height, content scrolls inside ── */
-#fractured-json-page-root #fj-browser-window {
-  margin:         10px 14px 14px;    /* no top margin — controls bar provides spacing */
-  border-radius:  12px;
-  border:         1px solid var(--bw-border);
-  box-shadow:     var(--bw-shadow);
-  overflow:       hidden;
-  display:        flex;
+  background: var(--bg);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
   flex-direction: column;
-  flex:           1;              /* grow to fill remaining viewport height */
-  min-height:     0;              /* allow flex child to shrink below content size */
+  position: relative;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* title bar */
-#fractured-json-page-root #fj-browser-titlebar {
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+/* ── controls toolbar (premium top header) ───────────────────────────────── */
+#fj-controls {
+  flex-shrink: 0;
+  padding: 12px 20px;
+  display: flex;
+  flex-wrap: wrap; /* Allows safe wrapping on narrow screens */
+  align-items: center;
+  gap: 16px;
+  background: rgba(15, 23, 32, 0.85);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid var(--bw-border);
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+#fractured-json-page-root.theme-light #fj-controls {
+  background: rgba(243, 244, 246, 0.85);
+}
+
+.fj-brand {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 0 14px;
-  height: 40px;
-  background: var(--bw-titlebar);
-  border-bottom: 1px solid var(--bw-border);
-  flex-shrink: 0;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  margin-right: 8px;
+}
+
+.fj-brand img {
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+/* Mode toggles (Pretty, Minify, Near-min) */
+.fj-mode-group-inner {
+  display: flex !important;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 3px !important;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+#fractured-json-page-root.theme-light .fj-mode-group-inner {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+.fj-mode-group-inner label {
+  cursor: pointer;
+  padding: 6px 16px !important;
+  border-radius: 8px;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  color: rgba(255, 255, 255, 0.6);
   user-select: none;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+#fractured-json-page-root.theme-light .fj-mode-group-inner label {
+  color: rgba(0, 0, 0, 0.6);
 }
 
-/* traffic lights */
-#fractured-json-page-root #fj-traffic-lights {
-  display: flex;
-  gap: 7px;
+.fj-mode-group-inner label:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.05);
+}
+#fractured-json-page-root.theme-light .fj-mode-group-inner label:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.fj-mode-group-inner label:has(input:checked) {
+  background: var(--accent);
+  color: var(--accent-fg) !important;
+  box-shadow: 0 4px 12px var(--accent-shadow);
+  pointer-events: none;
+  cursor: default;
+}
+
+#fj-controls input[type="radio"] {
+  display: none !important;
+}
+
+/* Line numbers toggle */
+.fj-line-lbl {
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  border: 1px solid var(--bw-border);
+  background: rgba(255, 255, 255, 0.02);
+  transition: all 0.2s;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+#fractured-json-page-root.theme-light .fj-line-lbl {
+  background: rgba(0, 0, 0, 0.02);
+}
+.fj-line-lbl:has(input:checked) {
+  background: var(--accent-bg-alpha);
+  border-color: var(--accent-border-alpha);
+  color: var(--accent);
+}
+
+#fj-line-toggle {
+  display: none !important;
+}
+
+/* Theme selector label wrapper */
+.fj-theme-lbl {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  font-size: 13px !important;
+  color: rgba(255, 255, 255, 0.6) !important;
+  font-weight: 500 !important;
+}
+#fractured-json-page-root.theme-light .fj-theme-lbl {
+  color: rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Right group alignment (no border, just gap is enough) */
+.fj-right-group {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin-left: auto !important;
+  padding-right: 4px !important;
+}
+
+#fj-theme-select {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid var(--bw-border) !important;
+  color: var(--text) !important;
+  border-radius: 8px !important;
+  padding: 6px 32px 6px 12px !important;
+  font-size: 13px !important;
+  font-family: inherit !important;
+  font-weight: 500 !important;
+  outline: none !important;
+  cursor: pointer !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  transition: all 0.2s !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  width: 100% !important;
+}
+
+/* Wrapper that holds select + custom chevron */
+.fj-select-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.fj-select-wrap .fj-chevron {
+  position: absolute;
+  right: 10px;
+  pointer-events: none;
+  color: var(--text);
+  opacity: 0.7;
   flex-shrink: 0;
 }
-#fractured-json-page-root .fj-dot {
-  width: 13px;
-  height: 13px;
-  border-radius: 50%;
-  display: inline-block;
-  cursor: default;
-  transition: filter 0.15s ease;
+
+#fj-theme-select:hover {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
 }
-#fractured-json-page-root .fj-dot:hover {
-  filter: brightness(1.25);
+#fractured-json-page-root.theme-light #fj-theme-select {
+  background: rgba(0, 0, 0, 0.02) !important;
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM1NTU1NTUiIHN0cm9rZS13aWR0aD0iMi41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Im02IDkgNiA2IDYtNiI+PC9wYXRoPjwvc3ZnPg==") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 10px center !important;
 }
-#fractured-json-page-root .fj-dot-red {
-  background: #ff5f57;
-  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.25);
+#fractured-json-page-root.theme-light #fj-theme-select:hover {
+  background-color: rgba(0, 0, 0, 0.06) !important;
 }
-#fractured-json-page-root .fj-dot-yellow {
-  background: #febc2e;
-  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.2);
-}
-#fractured-json-page-root .fj-dot-green {
-  background: #28c840;
-  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.2);
+#fj-theme-select option {
+  background: var(--card) !important;
+  color: var(--text) !important;
 }
 
-/* address bar */
-#fractured-json-page-root #fj-addressbar {
+/* Action buttons */
+#fj-view-raw, #fj-download, #fj-copy {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--bw-border);
+  color: var(--text);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+#fractured-json-page-root.theme-light #fj-view-raw, 
+#fractured-json-page-root.theme-light #fj-download,
+#fractured-json-page-root.theme-light #fj-copy {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+#fj-view-raw:hover, #fj-download:hover, #fj-copy:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+#fractured-json-page-root.theme-light #fj-view-raw:hover, 
+#fractured-json-page-root.theme-light #fj-download:hover,
+#fractured-json-page-root.theme-light #fj-copy:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+#fj-status {
+  font-size: 12px !important;
+  color: rgba(255, 255, 255, 0.4) !important;
+  white-space: nowrap;
+}
+#fj-status:empty {
+  display: none !important;
+}
+#fractured-json-page-root.theme-light #fj-status {
+  color: rgba(0, 0, 0, 0.4) !important;
+}
+
+/* ── browser shell ───────────────────────────────────────────────────────── */
+#fj-browser-window {
+  margin: 16px 20px 20px;
   flex: 1;
+  background: var(--bw-body);
+  border-radius: 12px;
+  border: 1px solid var(--bw-border);
+  box-shadow: var(--bw-shadow);
   display: flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--bw-bar-bg);
-  border-radius: 20px;
-  padding: 0 12px;
-  height: 26px;
-  max-width: 640px;
-  margin: 0 auto;
+  flex-direction: column;
   overflow: hidden;
 }
-#fractured-json-page-root #fj-lock-icon {
-  width: 13px;
-  height: 13px;
-  flex-shrink: 0;
-  color: var(--bw-bar-text);
-  opacity: 0.8;
+
+#fj-browser-titlebar {
+  height: 48px;
+  background: var(--bw-titlebar);
+  border-bottom: 1px solid var(--bw-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  position: relative;
 }
-#fractured-json-page-root #fj-url-display {
-  font-size: 11.5px;
+
+#fj-traffic-lights {
+  display: flex;
+  gap: 8px;
+  position: absolute;
+  left: 16px;
+}
+
+.fj-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.fj-dot-red { background: #ff5f57; }
+.fj-dot-yellow { background: #febc2e; }
+.fj-dot-green { background: #28c840; }
+
+#fj-addressbar {
+  width: 100%;
+  max-width: 600px;
+  height: 28px;
+  background: var(--bw-bar-bg);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 8px;
+  margin: 0;
+}
+
+#fj-url-display {
+  font-family: ui-monospace, Menlo, Monaco, monospace;
+  font-size: 12px;
   color: var(--bw-bar-text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  letter-spacing: 0.01em;
-  font-family: ui-monospace, 'SFMono-Regular', Menlo, Monaco, monospace;
 }
 
-/* window body — fills remaining window height, lets outputFrame scroll */
-#fractured-json-page-root #fj-browser-body {
-  background: var(--bw-body);
-  flex:       1;
-  overflow:   hidden;
-  display:    flex;
-  flex-direction: column;
-  min-height: 0;
+#fj-browser-body {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
 }
 
-/* ── JSON output area — scrolls independently inside the window body ──────── */
-#fractured-json-page-root #outputFrame {
-  flex:       1;                  /* fill the browser body */
-  overflow:   auto;               /* THIS is the scroll container */
-  min-height: 0;
-  background: linear-gradient(180deg, #0b1220, #0f1728);
-}
-#fractured-json-page-root.theme-light #outputFrame {
-  background: #ffffff;
-}
-#fractured-json-page-root.theme-cobalt #outputFrame {
-  background: linear-gradient(180deg, #00162a, #002240);
+#outputFrame {
+  height: 100%;
+  overflow: auto;
 }
 
-#fractured-json-page-root #outputPre {
-  margin:        0;
-  padding:       16px;
-  padding-left:  16px;            /* default padding when NO line numbers */
-  min-height:    100%;
-  color:         var(--text);
-  font-family:   ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', monospace;
-  font-size:     12.5px;
-  line-height:   1.45;
-  white-space:   pre;
-  overflow:      visible;
-  background:    transparent;
-}
-#fractured-json-page-root #outputPre code {
-  display:    block;
-  white-space: pre;
+#outputPre {
+  margin: 0;
+  padding: 24px;
+  font-family: 'Fira Code', 'Roboto Mono', ui-monospace, Menlo, Monaco, monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  transition: opacity 0.3s ease, padding-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ── line numbers (single-element, bulletproof for any line count) ────────── */
-/* When .line[data-ln] elements are present, pad the pre for the gutter
-   and paint the gutter column as a background gradient. */
-#fractured-json-page-root #outputPre:has(.line[data-ln]) {
-  padding-left:  calc(var(--gutter-w) + 16px);
-  /* painted gutter background — first column is solid, then a separator line */
-  background-image:
-    linear-gradient(to right, var(--gutter-bg), var(--gutter-bg)),
-    linear-gradient(to right, var(--gutter-sep), var(--gutter-sep));
-  background-size:
-    var(--gutter-w) 100%,       /* gutter fill */
-    1px 100%;                   /* 1px separator line */
-  background-position:
-    left top,
-    var(--gutter-w) top;
-  background-repeat: no-repeat;
+/* ── raw textarea ───────────────────────────────────────────────────────── */
+textarea#fj-raw-output {
+  margin: 0;
+  border-radius: 0;
+  border: none;
+  padding: 24px;
+  font-family: 'Fira Code', ui-monospace, Menlo, Monaco, monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text);
+  background: transparent;
+  resize: none;
+  outline: none;
+  height: 100%;
+  width: 100%;
+}
+#fractured-json-page-root.theme-light textarea#fj-raw-output {
+  box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
 }
 
-/* each code line — block-level, positioned so ::before can sit in the gutter */
-#fractured-json-page-root .line {
-  display:     block;
-  line-height: 1.45;
-  white-space: pre;
-  position:    relative;
+/* ── highlight ──────────────────────────────────────────────────────────── */
+.tok-key { color: var(--tok-key); font-weight: 600; }
+.tok-string { color: var(--tok-string); }
+.tok-number { color: var(--tok-number); }
+.tok-boolean { color: var(--tok-boolean); font-weight: 600; }
+.tok-punct { color: var(--tok-punct); }
+.tok-comment { color: var(--tok-comment); font-style: italic; }
+
+#outputPre:has(.line) {
+  padding-left: 64px;
 }
 
-/* the line number itself — rendered from the data-ln attribute */
-#fractured-json-page-root .line[data-ln]::before {
-  content:      attr(data-ln);
-  position:     absolute;
-  /* sit inside the gutter column (which is at left edge of the pre) */
-  left:         calc(-1 * var(--gutter-w) - 16px);
-  width:        var(--gutter-w);
-  padding-right: 10px;
-  box-sizing:   border-box;
-  text-align:   right;
-  font-size:    11px;
-  line-height:  inherit;         /* same as the code line — can't drift */
-  color:        var(--gutter-text);
-  font-family:  ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.02em;
-  user-select:  none;
-  pointer-events: none;
+#outputPre:not(:has(.line)) {
+  padding-left: 24px;
 }
 
-/* subtle hover highlight on line numbers */
-#fractured-json-page-root .line[data-ln]:hover::before {
-  color: var(--gutter-hover);
+.line {
+  position: relative;
+  display: block;
 }
 
-/* every 5th line number is slightly brighter for easy scanning */
-#fractured-json-page-root .line[data-ln]:nth-child(5n)::before {
-  color: color-mix(in srgb, var(--gutter-text) 100%, var(--gutter-hover) 30%);
+@keyframes fj-slide-in {
+  from { opacity: 0; transform: translateX(-12px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
-/* ── token colours (default dark) ───────────────────────────────────────── */
-#fractured-json-page-root .tok-key {
-  color: #ffb86b;
-  font-weight: 600;
+.line::before {
+  content: attr(data-ln);
+  position: absolute;
+  left: -48px;
+  width: 32px;
+  text-align: right;
+  color: rgba(255, 255, 255, 0.2);
+  font-size: 12px;
+  user-select: none;
+  animation: fj-slide-in 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
-#fractured-json-page-root .tok-string {
-  color: #98c379;
+#fractured-json-page-root.theme-light .line::before {
+  color: rgba(0, 0, 0, 0.2);
 }
-#fractured-json-page-root .tok-number {
-  color: #ff79c6;
-}
-#fractured-json-page-root .tok-boolean {
-  color: #56b6c2;
-  font-weight: 600;
-}
-#fractured-json-page-root .tok-null {
-  color: #7d8799;
-  font-style: italic;
-}
-#fractured-json-page-root .tok-punct {
-  color: #c8ccd4;
-}
-#fractured-json-page-root .tok-comment {
-  color: #7a828f;
-  font-style: italic;
-}
-
-/* ── line numbers (old ::before approach removed — see fj-gutter above) ────── */
 
 /* ── scrollbars ──────────────────────────────────────────────────────────── */
-#fractured-json-page-root #outputFrame::-webkit-scrollbar {
-  height: 10px;
-  width: 10px;
+#outputFrame::-webkit-scrollbar,
+textarea#fj-raw-output::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
 }
-#fractured-json-page-root #outputFrame::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.06);
+#outputFrame::-webkit-scrollbar-thumb,
+textarea#fj-raw-output::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 6px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
 }
-
-/* ── responsive ──────────────────────────────────────────────────────────── */
-@media (max-width: 520px) {
-  #fractured-json-page-root #fj-controls {
-    padding: 8px;
-    gap: 6px;
-  }
-  #fractured-json-page-root #fj-browser-window {
-    margin: 0 4px 8px;
-  }
-  #fractured-json-page-root textarea {
-    height: 150px;
-  }
-  #fractured-json-page-root #fj-addressbar {
-    max-width: 100%;
-  }
+#fractured-json-page-root.theme-light #outputFrame::-webkit-scrollbar-thumb,
+#fractured-json-page-root.theme-light textarea#fj-raw-output::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.15);
+}
+#outputFrame::-webkit-scrollbar-thumb:hover,
+textarea#fj-raw-output::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+#fractured-json-page-root.theme-light #outputFrame::-webkit-scrollbar-thumb:hover,
+#fractured-json-page-root.theme-light textarea#fj-raw-output::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.25);
 }

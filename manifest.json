@@ -32,7 +32,9 @@
     {
       "resources": [
         "contentWorker.js",
-        "styles.css"
+        "styles.css",
+        "logo-16.png",
+        "logo-48.png"
       ],
       "matches": [
         "<all_urls>"
